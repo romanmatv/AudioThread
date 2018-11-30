@@ -13,7 +13,7 @@ DEFINES += AUDIOTHREAD_LIBRARY
 
 DESTDIR = dist
 # Версия библиотеки.
-VERSION = 1.0.0
+VERSION = 0.1.0
 # Указываем, что собирать надо release и debug версии библиотек
 CONFIG += build_all
 

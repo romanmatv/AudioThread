@@ -42,7 +42,7 @@ void Track::clear(){
 
 void Track::search_cover(QString search){
     last_search = search;
-    qDebug() << "Пробуем загрузиться с яндекса: "<<search;
+    //qDebug() << "Пробуем загрузиться с яндекса: "<<search;
     parse("https://yandex.ru/images/search?text="+search+" cover art");
 }
 
@@ -65,7 +65,7 @@ void Track::parse(QString url) {
 }
 
 void Track::slotReadyRead(){
-    qDebug() << "Сработал slotReadyRead";
+    //qDebug() << "Сработал slotReadyRead";
 
     QNetworkReply* reply = qobject_cast<QNetworkReply*>(sender());
     QString response;// = reply->readAll();
@@ -80,24 +80,24 @@ void Track::slotReadyRead(){
             response =  tr("Error: %1 status: %2").arg(reply->errorString(), reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString());
         }
         finding(response);
-        qDebug()<<"code: "<<reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString();
+        //qDebug()<<"code: "<<reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toString();
         reply->deleteLater();
     }
 }
 void Track::slotError(QNetworkReply::NetworkError error){
-    qDebug() << "Сработал slotError";
+    //qDebug() << "Сработал slotError";
     qDebug() << error;
 }
 void Track::slotSslErrors(QList<QSslError> errors){
-    qDebug() << "Сработал slotSslErrors";
+    //qDebug() << "Сработал slotSslErrors";
     for (int i = 0; i< errors.count();i++)
         qDebug() << errors[i].errorString();
 }
 
 void Track::finding(QString response){
-    qDebug() << "===================RESPONSE====================";
-    qDebug() << response;
-    qDebug() << "===============================================";
+    //qDebug() << "===================RESPONSE====================";
+    //qDebug() << response;
+    //qDebug() << "===============================================";
     QRegExp iconsRegExp_yandex("\"origin\":{\"w\":\\d+,\"h\":\\d+,\"url\":\"([\\/:\\w\\d\\/\\?.;=\\-&%]+)\"},");
     iconsRegExp_yandex.setMinimal(true);
 
@@ -106,24 +106,24 @@ void Track::finding(QString response){
 
     QStringList icons;
 
-    qDebug()<<"RegExp_yandex";
+    //qDebug()<<"RegExp_yandex";
     int lastPos = 0;
     while ((lastPos = iconsRegExp_yandex.indexIn(response, lastPos)) != -1) {
         QStringList iconData;
         lastPos += iconsRegExp_yandex.matchedLength();
 
         icons.push_back("https:"+iconsRegExp_yandex.cap(1));
-        qDebug() << iconsRegExp_google.cap(1);
+        //qDebug() << iconsRegExp_google.cap(1);
     }
 
-    qDebug()<<"RegExp_google";
+    //qDebug()<<"RegExp_google";
     lastPos = 0;
     while ((lastPos = iconsRegExp_google.indexIn(response, lastPos)) != -1) {
         QStringList iconData;
         lastPos += iconsRegExp_google.matchedLength();
 
         icons.push_back("https:"+iconsRegExp_google.cap(3));
-        qDebug() << iconsRegExp_google.cap(3);
+        //qDebug() << iconsRegExp_google.cap(3);
     }
 
     emit finished(icons);
@@ -139,9 +139,9 @@ void Track::onPage_loaded(QNetworkReply *reply) {
 
     //QString buff = reply->readAll();
 
-    qDebug() << reply->url();
+    //qDebug() << reply->url();
 
-    qDebug() << "Страница загружена: " << response;
+    //qDebug() << "Страница загружена: " << response;
 
     QRegExp iconsRegExp_yandex("\"origin\":{\"w\":\\d+,\"h\":\\d+,\"url\":\"([\\/:\\w\\d\\/\\?.;=\\-&%]+)\"},");
     iconsRegExp_yandex.setMinimal(true);
@@ -151,24 +151,24 @@ void Track::onPage_loaded(QNetworkReply *reply) {
 
     QStringList icons;
 
-    qDebug()<<"RegExp_yandex";
+    //qDebug()<<"RegExp_yandex";
     int lastPos = 0;
     while ((lastPos = iconsRegExp_yandex.indexIn(response, lastPos)) != -1) {
         QStringList iconData;
         lastPos += iconsRegExp_yandex.matchedLength();
 
         icons.push_back("https:"+iconsRegExp_yandex.cap(1));
-        qDebug() << iconsRegExp_google.cap(1);
+        //qDebug() << iconsRegExp_google.cap(1);
     }
 
-    qDebug()<<"RegExp_google";
+    //qDebug()<<"RegExp_google";
     lastPos = 0;
     while ((lastPos = iconsRegExp_google.indexIn(response, lastPos)) != -1) {
         QStringList iconData;
         lastPos += iconsRegExp_google.matchedLength();
 
         icons.push_back("https:"+iconsRegExp_google.cap(3));
-        qDebug() << iconsRegExp_google.cap(3);
+        //qDebug() << iconsRegExp_google.cap(3);
     }
 
     emit finished(icons);
@@ -177,11 +177,11 @@ void Track::onPage_loaded(QNetworkReply *reply) {
 }
 
 void Track::onFinish(QStringList ics){
-    qDebug() << "загрузка иконки";
+    //qDebug() << "загрузка иконки";
     if (ics.count()>0){
         m_pixmapLoader.load(ics[0]);
     }else{
-        qDebug() << "иконок нет, грузим с гугла";
+        //qDebug() << "иконок нет, грузим с гугла";
         if (!last_search.isEmpty() && last_search!=""){
             parse("https://www.google.ru/search?q="+last_search+" cover art&tbm=isch");
             last_search = "";
@@ -190,7 +190,7 @@ void Track::onFinish(QStringList ics){
 }
 
 void Track::onPixmap_load(QPixmap pixmap) {
-    qDebug() << "иконка загружена";
+    //qDebug() << "иконка загружена";
     cover = pixmap;
 }
 
